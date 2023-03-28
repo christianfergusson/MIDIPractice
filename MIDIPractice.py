@@ -129,31 +129,32 @@ class Staff():
         # self.note_spacing = 12
         # self.BPM = 120
 
-        BPM_choice = Staff.basic_font.render("BPM: " + str(self.BPM), True, BLACK)
+        BPM_choice = Staff.basic_font.render("BPM:  " + str(self.BPM), True, BLACK)
         BPM_choice_rect = BPM_choice.get_rect(center=(int((30)*Staff.x_percent), int((85)*Staff.y_percent)))
-        win.blit(BPM_choice, BPM_choice_rect)
+        win.blit(BPM_choice, (int((25)*Staff.x_percent), int((85)*Staff.y_percent)))
 
-        note_spacing_choice = Staff.basic_font.render("Spacing: " + str(self.note_spacing), True, BLACK)
+        note_spacing_choice = Staff.basic_font.render("Spacing:  " + str(self.note_spacing), True, BLACK)
         note_spacing_choice_rect = note_spacing_choice.get_rect(center=(int((30)*Staff.x_percent), int((90)*Staff.y_percent)))
-        win.blit(note_spacing_choice, note_spacing_choice_rect)
+        win.blit(note_spacing_choice, (int((25)*Staff.x_percent), int((90)*Staff.y_percent)))
 
-        staff_choice = Staff.basic_font.render(self.staves, True, BLACK)
+        staff_choice_text = "Staff:  " + self.staves
+        staff_choice = Staff.basic_font.render(staff_choice_text, True, BLACK)
         staff_choice_rect = staff_choice.get_rect(center=(int((30)*Staff.x_percent), int((95)*Staff.y_percent)))
-        win.blit(staff_choice, staff_choice_rect)
+        win.blit(staff_choice, (int((25)*Staff.x_percent), int((95)*Staff.y_percent)))
 
-        accidental_choice_text = "Use accidentals" if self.use_accidentals else "No accidentals"
+        accidental_choice_text = "Accidentals:  Yes" if self.use_accidentals else "Accidentals:  No"
         accidental_choice = Staff.basic_font.render(accidental_choice_text, True, BLACK)
         accidental_choice_rect = accidental_choice.get_rect(center=(int((60)*Staff.x_percent), int((85)*Staff.y_percent)))
-        win.blit(accidental_choice, accidental_choice_rect)
+        win.blit(accidental_choice, (int((55)*Staff.x_percent), int((85)*Staff.y_percent)))
 
-        letter_choice_text = "Show note letter" if self.show_letter else "Hide note letter"
+        letter_choice_text = "Note Letter:  Show" if self.show_letter else "Note Letter:  Hide"
         letter_choice = Staff.basic_font.render(letter_choice_text, True, BLACK)
         letter_choice_rect = letter_choice.get_rect(center=(int((60)*Staff.x_percent), int((90)*Staff.y_percent)))
-        win.blit(letter_choice, letter_choice_rect)
+        win.blit(letter_choice, (int((55)*Staff.x_percent), int((90)*Staff.y_percent)))
 
-        note_choice = Staff.basic_font.render("Note: " + self.note_type, True, BLACK)
+        note_choice = Staff.basic_font.render("Note:  " + self.note_type, True, BLACK)
         note_choice_rect = note_choice.get_rect(center=(int((60)*Staff.x_percent), int((95)*Staff.y_percent)))
-        win.blit(note_choice, note_choice_rect)
+        win.blit(note_choice, (int((55)*Staff.x_percent), int((95)*Staff.y_percent)))
     
     def render_staff(self):
         # Staves
