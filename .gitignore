@@ -1,0 +1,5 @@
+# Ignore all files in ANY directory named "ARCHIVE" or "BACKUP"
+ARCHIVE/
+BACKUP/
+EXTRAS/
+*.psd

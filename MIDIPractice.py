@@ -4,8 +4,14 @@ xTODO Fix ledger line positions
 xTODO Fix speed scaling to match BPM
 xTODO Add accidentals
 TODO Add graphics (clefs, accidentals, notes)
-TODO Add contols to select staves, speed, range
-TODO Add control to display note letter
+TODO Add contols for:
+        Setting speed (BPM)
+        Setting note spacing
+        Selecting staves
+        Using accidentals
+        Adjusting note range
+        Showing note letter
+        Changing note type
 xTODO Add note stems
 TODO Add speed scaling (+ and/or -) for position value reaching threshold
 TODO Restructure project
