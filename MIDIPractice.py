@@ -3,9 +3,12 @@ xTODO Fix scaling
 xTODO Fix ledger line positions
 xTODO Fix speed scaling to match BPM
 xTODO Add accidentals
-TODO Consolidate user var strings into lists
-TODO Add images (clefs, accidentals, notes)
-TODO Fix image scaling quality degradation
+TODO Consolidate user var strings into lists (to index through)
+xTODO Add images for clefs
+xTODO Add images for notes
+xTODO Add images for accidentals
+TODO Restructure scaling (https://www.pygame.org/wiki/WindowResizing)
+TODO Limit resizing ratio to prevent x-scale squish
 TODO Add contols for:
         Setting speed (BPM)
         Setting note spacing
@@ -17,6 +20,7 @@ TODO Add contols for:
         Merging/splitting staves
 xTODO Add note stems
 TODO Add speed scaling (+ and/or -) for position value reaching threshold
+TODO Align image files around an origin (if you find time)
 TODO Restructure project
 '''
 
@@ -68,7 +72,7 @@ class Staff():
     TREBLE_MIDDLE_C_YLOC = 35
     BASS_MIDDLE_C_YLOC = 45
     STAFF_XLOC = 6
-    GOAL_XLOC = 20
+    GOAL_XLOC = 26
 
     winx = None
     winy = None
@@ -82,6 +86,21 @@ class Staff():
     treble_clef_img = pygame.image.load("graphics\\treble_clef.png").convert_alpha()
     bass_clef_ratio = 150/130
     bass_clef_img = pygame.image.load("graphics\\bass_clef.png").convert_alpha()
+    sharp_ratio = 142/45
+    sharp_img = pygame.image.load("graphics\\sharp.png").convert_alpha()
+    flat_ratio = 106/43
+    flat_img = pygame.image.load("graphics\\flat.png").convert_alpha()
+    whole_note_ratio = 48/79
+    whole_note_img = pygame.image.load("graphics\\whole_note.png").convert_alpha()
+    half_note_ratio = 188/62
+    half_note_up_img = pygame.image.load("graphics\\half_note.png").convert_alpha()
+    half_note_down_img = pygame.image.load("graphics\\half_note.png").convert_alpha()
+    quarter_note_ratio = 188/62
+    quarter_note_up_img = pygame.transform.rotate(pygame.image.load("graphics\\quarter_note.png").convert_alpha(),180)
+    quarter_note_down_img = pygame.transform.rotate(pygame.image.load("graphics\\quarter_note.png").convert_alpha(),180)
+
+    old_winx = 0
+    old_winy = 0
 
 
     
@@ -116,13 +135,35 @@ class Staff():
     
     def scale():
         Staff.winx, Staff.winy = win.get_size()
-        Staff.x_percent = Staff.winx/100
-        Staff.y_percent = Staff.winy/100
-        Staff.basic_font = pygame.font.SysFont('Calibri', int(4*Staff.y_percent))
-        Staff.accidental_font = pygame.font.SysFont('Calibri', int(6*Staff.y_percent))
-        Staff.symbol_font = pygame.font.SysFont('Calibri', int(8*Staff.y_percent), bold=True)
-        Staff.treble_clef_img = pygame.transform.scale(Staff.treble_clef_img, (int(10*Staff.y_percent),int(10*Staff.y_percent*Staff.treble_clef_ratio)))
-        Staff.bass_clef_img = pygame.transform.scale(Staff.bass_clef_img, (int(12*Staff.y_percent),int(12*Staff.y_percent*Staff.bass_clef_ratio)))
+        if Staff.winx != Staff.old_winx or Staff.winy != Staff.old_winy:
+            #if Staff.winy > Staff.winx*4:
+                #win = pygame.display.set_mode((Staff.winy/4, Staff.winy), pygame.RESIZABLE)
+            Staff.old_winx = Staff.winx
+            Staff.old_winy = Staff.winy
+            Staff.x_percent = Staff.winx/100
+            Staff.y_percent = Staff.winy/100
+            Staff.basic_font = pygame.font.SysFont('Calibri', int(4*Staff.y_percent))
+            Staff.accidental_font = pygame.font.SysFont('Calibri', int(6*Staff.y_percent))
+            Staff.symbol_font = pygame.font.SysFont('Calibri', int(8*Staff.y_percent), bold=True)
+            Staff.treble_clef_img = pygame.image.load("graphics\\treble_clef.png").convert_alpha()
+            Staff.bass_clef_img = pygame.image.load("graphics\\bass_clef.png").convert_alpha()
+            Staff.sharp_img = pygame.image.load("graphics\\sharp.png").convert_alpha()
+            Staff.flat_img = pygame.image.load("graphics\\flat.png").convert_alpha()
+            Staff.whole_note_img = pygame.image.load("graphics\\whole_note.png").convert_alpha()
+            Staff.half_note_up_img = pygame.image.load("graphics\\half_note.png").convert_alpha()
+            Staff.half_note_down_img = pygame.transform.rotate(pygame.image.load("graphics\\half_note.png").convert_alpha(),180)
+            Staff.quarter_note_up_img = pygame.image.load("graphics\\quarter_note.png").convert_alpha()
+            Staff.quarter_note_down_img = pygame.transform.rotate(pygame.image.load("graphics\\quarter_note.png").convert_alpha(),180)
+            Staff.treble_clef_img = pygame.transform.scale(Staff.treble_clef_img, (int(10*Staff.y_percent),int(10*Staff.y_percent*Staff.treble_clef_ratio)))
+            Staff.bass_clef_img = pygame.transform.scale(Staff.bass_clef_img, (int(12*Staff.y_percent),int(12*Staff.y_percent*Staff.bass_clef_ratio)))
+            Staff.sharp_img = pygame.transform.scale(Staff.sharp_img, (int(2.5*Staff.y_percent),int(2.5*Staff.y_percent*Staff.sharp_ratio)))
+            Staff.flat_img = pygame.transform.scale(Staff.flat_img, (int(3*Staff.y_percent),int(3*Staff.y_percent*Staff.flat_ratio)))
+            Staff.whole_note_img = pygame.transform.scale(Staff.whole_note_img, (int(7*Staff.y_percent),int(7*Staff.y_percent*Staff.whole_note_ratio)))
+            Staff.half_note_up_img = pygame.transform.scale(Staff.half_note_up_img, (int(5*Staff.y_percent),int(5*Staff.y_percent*Staff.half_note_ratio)))
+            Staff.half_note_down_img = pygame.transform.scale(Staff.half_note_down_img, (int(5*Staff.y_percent),int(5*Staff.y_percent*Staff.half_note_ratio)))
+            Staff.quarter_note_up_img = pygame.transform.scale(Staff.quarter_note_up_img, (int(5*Staff.y_percent),int(5*Staff.y_percent*Staff.quarter_note_ratio)))
+            Staff.quarter_note_down_img = pygame.transform.scale(Staff.quarter_note_down_img, (int(5*Staff.y_percent),int(5*Staff.y_percent*Staff.quarter_note_ratio)))
+
     
     def add_notes(self):
         self.note_qty = int(100/self.note_spacing)
@@ -185,22 +226,22 @@ class Staff():
             
         # Clefs
         win.blit(Staff.treble_clef_img,
-                 (int((Staff.GOAL_XLOC-13)*Staff.x_percent),
+                 (int((Staff.STAFF_XLOC+2)*Staff.x_percent),
                   int((Staff.TREBLE_MIDDLE_C_YLOC-25)*Staff.y_percent)))
         win.blit(Staff.bass_clef_img,
-                 (int((Staff.GOAL_XLOC-13)*Staff.x_percent),
+                 (int((Staff.STAFF_XLOC+2)*Staff.x_percent),
                   int((Staff.BASS_MIDDLE_C_YLOC+4)*Staff.y_percent)))
         
         # Goal Lines
         pygame.draw.rect(win,
                          BLACK,
-                         (int((Staff.GOAL_XLOC)*Staff.x_percent),
+                         (int((Staff.STAFF_XLOC+13)*Staff.x_percent),
                           int((Staff.TREBLE_MIDDLE_C_YLOC-Staff.NOTE_SIZE*10)*Staff.y_percent),
                           2,
                           int((Staff.NOTE_SIZE*8)*Staff.y_percent)))
         pygame.draw.rect(win,
                          BLACK,
-                         (int((Staff.GOAL_XLOC)*Staff.x_percent),
+                         (int((Staff.STAFF_XLOC+13)*Staff.x_percent),
                           int((Staff.BASS_MIDDLE_C_YLOC+Staff.NOTE_SIZE*2)*Staff.y_percent),
                           2,
                           int((Staff.NOTE_SIZE*8)*Staff.y_percent)))
@@ -221,7 +262,7 @@ class Staff():
                 note_letter_rect = note_letter.get_rect(center=(int((note_xloc)*Staff.x_percent), int((2)*Staff.y_percent + 20)))
                 win.blit(note_letter, note_letter_rect)
 
-            # Ledger lines
+            # Ledger Lines
             if note.note_value >= 50:
                 if note.note_height < 1:
                     for ledgerLine in range((2-note.note_height)//2):
@@ -239,40 +280,52 @@ class Staff():
                                           int((Staff.TREBLE_MIDDLE_C_YLOC-(12*Staff.NOTE_SIZE)-(ledgerLine*2)*Staff.NOTE_SIZE)*Staff.y_percent),
                                           int((Staff.NOTE_SIZE*2)*Staff.x_percent),
                                           2))
-                        
-            # Note head
-            pygame.gfxdraw.filled_circle(win,
+            
+            # Note
+            if self.note_type == "Whole":
+                win.blit(Staff.whole_note_img,
+                 (int((note_xloc-2.5)*Staff.x_percent),
+                  int((Staff.TREBLE_MIDDLE_C_YLOC-(note.note_height+1)*Staff.NOTE_SIZE)*Staff.y_percent)))
+            elif self.note_type == "Half":
+                if note.stem_up == True:
+                    win.blit(Staff.half_note_up_img,
+                    (int((note_xloc-2)*Staff.x_percent),
+                    int((Staff.TREBLE_MIDDLE_C_YLOC-(note.note_height+6.4)*Staff.NOTE_SIZE)*Staff.y_percent)))
+                else:
+                    win.blit(Staff.half_note_down_img,
+                    (int((note_xloc-2)*Staff.x_percent),
+                    int((Staff.TREBLE_MIDDLE_C_YLOC-(note.note_height+1.1)*Staff.NOTE_SIZE)*Staff.y_percent)))
+            elif self.note_type == "Quarter":
+                if note.stem_up == True:
+                    win.blit(Staff.quarter_note_up_img,
+                    (int((note_xloc-2)*Staff.x_percent),
+                    int((Staff.TREBLE_MIDDLE_C_YLOC-(note.note_height+6.4)*Staff.NOTE_SIZE)*Staff.y_percent)))
+                else:
+                    win.blit(Staff.quarter_note_down_img,
+                    (int((note_xloc-2)*Staff.x_percent),
+                    int((Staff.TREBLE_MIDDLE_C_YLOC-(note.note_height+1.1)*Staff.NOTE_SIZE)*Staff.y_percent)))
+            else:
+                pygame.gfxdraw.filled_circle(win,
                                          int((note_xloc)*Staff.x_percent),
                                          int((Staff.TREBLE_MIDDLE_C_YLOC-(note.note_height)*Staff.NOTE_SIZE)*Staff.y_percent),
                                          int((Staff.NOTE_SIZE)*Staff.y_percent),
                                          note.note_color)
-            
-            # Note stem
-            if self.note_type != "Whole":
-                if note.stem_up == True:
-                    pygame.draw.rect(win,
-                                    note.note_color,
-                                    (int((note_xloc + Staff.NOTE_SIZE*0.65)*Staff.x_percent),
-                                    int((Staff.TREBLE_MIDDLE_C_YLOC-(note.note_height)*Staff.NOTE_SIZE-Staff.NOTE_SIZE*5)*Staff.y_percent),
-                                    3,
-                                    int((Staff.NOTE_SIZE*4)*Staff.x_percent)))
-                else:
-                    pygame.draw.rect(win,
-                                    note.note_color,
-                                    (int((note_xloc - Staff.NOTE_SIZE*0.75)*Staff.x_percent),
-                                    int((Staff.TREBLE_MIDDLE_C_YLOC-(note.note_height)*Staff.NOTE_SIZE)*Staff.y_percent),
-                                    3,
-                                    int((Staff.NOTE_SIZE*4)*Staff.x_percent)))
                     
             # Accidentals
             if note.accidental < 0:
-                flatSymbol = Staff.accidental_font.render("b", True, note.note_color)
-                flatSymbolRect = flatSymbol.get_rect(center=((note_xloc - 3)*Staff.x_percent, (Staff.TREBLE_MIDDLE_C_YLOC-(note.note_height)*Staff.NOTE_SIZE-1)*Staff.y_percent))
-                win.blit(flatSymbol, flatSymbolRect)
+                win.blit(Staff.flat_img,
+                 (int((note_xloc-5)*Staff.x_percent),
+                  int((Staff.TREBLE_MIDDLE_C_YLOC-(note.note_height+2.3)*Staff.NOTE_SIZE)*Staff.y_percent)))
+                #flat_symbol = Staff.accidental_font.render("b", True, note.note_color)
+                #flat_symbol_rect = flat_symbol.get_rect(center=((note_xloc - 3)*Staff.x_percent, (Staff.TREBLE_MIDDLE_C_YLOC-(note.note_height)*Staff.NOTE_SIZE-1)*Staff.y_percent))
+                #win.blit(flat_symbol, flat_symbol_rect)
             if note.accidental > 0:
-                flatSymbol = Staff.accidental_font.render("#", True, note.note_color)
-                flatSymbolRect = flatSymbol.get_rect(center=((note_xloc - 3)*Staff.x_percent, (Staff.TREBLE_MIDDLE_C_YLOC-(note.note_height)*Staff.NOTE_SIZE-0.5)*Staff.y_percent))
-                win.blit(flatSymbol, flatSymbolRect)
+                win.blit(Staff.sharp_img,
+                 (int((note_xloc-4.5)*Staff.x_percent),
+                  int((Staff.TREBLE_MIDDLE_C_YLOC-(note.note_height+1.8)*Staff.NOTE_SIZE)*Staff.y_percent)))
+                #sharp_symbol = Staff.accidental_font.render("#", True, note.note_color)
+                #sharp_symbol_rect = sharp_symbol.get_rect(center=((note_xloc - 3)*Staff.x_percent, (Staff.TREBLE_MIDDLE_C_YLOC-(note.note_height)*Staff.NOTE_SIZE-0.5)*Staff.y_percent))
+                #win.blit(sharp_symbol, sharp_symbol_rect)
 
     def render_symbol(self):
         if self.symbol_alpha > 0:
@@ -281,7 +334,7 @@ class Staff():
             if not self.symbol_correct:
                 symbol = Staff.symbol_font.render("X", True, RED)
             symbol.set_alpha(self.symbol_alpha)
-            symbol_rect = symbol.get_rect(center=(int((Staff.GOAL_XLOC)*Staff.x_percent), int((Staff.TREBLE_MIDDLE_C_YLOC - Staff.NOTE_SIZE*14.9)*Staff.y_percent)))
+            symbol_rect = symbol.get_rect(center=(int((Staff.GOAL_XLOC-0.8)*Staff.x_percent), int((Staff.TREBLE_MIDDLE_C_YLOC - Staff.NOTE_SIZE*14.9)*Staff.y_percent)))
             win.blit(symbol, symbol_rect)
             self.symbol_alpha -= self.symbol_speed
 
