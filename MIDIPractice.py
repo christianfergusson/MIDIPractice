@@ -3,7 +3,9 @@ xTODO Fix scaling
 xTODO Fix ledger line positions
 xTODO Fix speed scaling to match BPM
 xTODO Add accidentals
-TODO Add graphics (clefs, accidentals, notes)
+TODO Consolidate user var strings into lists
+TODO Add images (clefs, accidentals, notes)
+TODO Fix image scaling quality degradation
 TODO Add contols for:
         Setting speed (BPM)
         Setting note spacing
@@ -12,6 +14,7 @@ TODO Add contols for:
         Adjusting note range
         Showing note letter
         Changing note type
+        Merging/splitting staves
 xTODO Add note stems
 TODO Add speed scaling (+ and/or -) for position value reaching threshold
 TODO Restructure project
@@ -75,6 +78,11 @@ class Staff():
     basic_font = None
     symbol_font = None
     
+    treble_clef_ratio = 323/118
+    treble_clef_img = pygame.image.load("graphics\\treble_clef.png").convert_alpha()
+    bass_clef_ratio = 150/130
+    bass_clef_img = pygame.image.load("graphics\\bass_clef.png").convert_alpha()
+
 
     
     def __init__(self):
@@ -83,10 +91,11 @@ class Staff():
         # User variables
         self.BPM = 120
         self.note_spacing = 12
-        self.staves = "treble"
+        self.staves = "Treble"
         self.use_accidentals = False
         self.show_letter = False
-        self.note_type = "whole"
+        self.show_MIDI = False
+        self.note_type = "Whole"
         ##
         
         self.note_list = []
@@ -103,6 +112,7 @@ class Staff():
         self.symbol_speed = 12
         self.symbol_timer = 0
         self.symbol_alpha = 0
+
     
     def scale():
         Staff.winx, Staff.winy = win.get_size()
@@ -111,6 +121,8 @@ class Staff():
         Staff.basic_font = pygame.font.SysFont('Calibri', int(4*Staff.y_percent))
         Staff.accidental_font = pygame.font.SysFont('Calibri', int(6*Staff.y_percent))
         Staff.symbol_font = pygame.font.SysFont('Calibri', int(8*Staff.y_percent), bold=True)
+        Staff.treble_clef_img = pygame.transform.scale(Staff.treble_clef_img, (int(10*Staff.y_percent),int(10*Staff.y_percent*Staff.treble_clef_ratio)))
+        Staff.bass_clef_img = pygame.transform.scale(Staff.bass_clef_img, (int(12*Staff.y_percent),int(12*Staff.y_percent*Staff.bass_clef_ratio)))
     
     def add_notes(self):
         self.note_qty = int(100/self.note_spacing)
@@ -132,34 +144,26 @@ class Staff():
         self.render_options()
     
     def render_options(self):
-        # self.note_spacing = 12
-        # self.BPM = 120
 
         BPM_choice = Staff.basic_font.render("BPM:  " + str(self.BPM), True, BLACK)
-        BPM_choice_rect = BPM_choice.get_rect(center=(int((30)*Staff.x_percent), int((85)*Staff.y_percent)))
         win.blit(BPM_choice, (int((25)*Staff.x_percent), int((85)*Staff.y_percent)))
 
         note_spacing_choice = Staff.basic_font.render("Spacing:  " + str(self.note_spacing), True, BLACK)
-        note_spacing_choice_rect = note_spacing_choice.get_rect(center=(int((30)*Staff.x_percent), int((90)*Staff.y_percent)))
         win.blit(note_spacing_choice, (int((25)*Staff.x_percent), int((90)*Staff.y_percent)))
 
         staff_choice_text = "Staff:  " + self.staves
         staff_choice = Staff.basic_font.render(staff_choice_text, True, BLACK)
-        staff_choice_rect = staff_choice.get_rect(center=(int((30)*Staff.x_percent), int((95)*Staff.y_percent)))
         win.blit(staff_choice, (int((25)*Staff.x_percent), int((95)*Staff.y_percent)))
 
         accidental_choice_text = "Accidentals:  Yes" if self.use_accidentals else "Accidentals:  No"
         accidental_choice = Staff.basic_font.render(accidental_choice_text, True, BLACK)
-        accidental_choice_rect = accidental_choice.get_rect(center=(int((60)*Staff.x_percent), int((85)*Staff.y_percent)))
         win.blit(accidental_choice, (int((55)*Staff.x_percent), int((85)*Staff.y_percent)))
 
         letter_choice_text = "Note Letter:  Show" if self.show_letter else "Note Letter:  Hide"
         letter_choice = Staff.basic_font.render(letter_choice_text, True, BLACK)
-        letter_choice_rect = letter_choice.get_rect(center=(int((60)*Staff.x_percent), int((90)*Staff.y_percent)))
         win.blit(letter_choice, (int((55)*Staff.x_percent), int((90)*Staff.y_percent)))
 
         note_choice = Staff.basic_font.render("Note:  " + self.note_type, True, BLACK)
-        note_choice_rect = note_choice.get_rect(center=(int((60)*Staff.x_percent), int((95)*Staff.y_percent)))
         win.blit(note_choice, (int((55)*Staff.x_percent), int((95)*Staff.y_percent)))
     
     def render_staff(self):
@@ -178,6 +182,15 @@ class Staff():
                               int((Staff.BASS_MIDDLE_C_YLOC+(i+1)*Staff.NOTE_SIZE*2)*Staff.y_percent),
                               int((100)*Staff.x_percent),
                               2))
+            
+        # Clefs
+        win.blit(Staff.treble_clef_img,
+                 (int((Staff.GOAL_XLOC-13)*Staff.x_percent),
+                  int((Staff.TREBLE_MIDDLE_C_YLOC-25)*Staff.y_percent)))
+        win.blit(Staff.bass_clef_img,
+                 (int((Staff.GOAL_XLOC-13)*Staff.x_percent),
+                  int((Staff.BASS_MIDDLE_C_YLOC+4)*Staff.y_percent)))
+        
         # Goal Lines
         pygame.draw.rect(win,
                          BLACK,
@@ -195,15 +208,19 @@ class Staff():
     def render_notes(self):
         for index, note in enumerate(self.note_list):
             note_xloc = self.position+index*self.note_spacing
+
             # Note Value
-            note_num = Staff.basic_font.render(str(note.note_value), True, BLUE)
-            note_num_rect = note_num.get_rect(center=(int((note_xloc)*Staff.x_percent), int((2)*Staff.y_percent)))
-            win.blit(note_num, note_num_rect)
+            if self.show_MIDI == True:
+                note_num = Staff.basic_font.render(str(note.note_value), True, BLUE)
+                note_num_rect = note_num.get_rect(center=(int((note_xloc)*Staff.x_percent), int((2)*Staff.y_percent)))
+                win.blit(note_num, note_num_rect)
+
             # Note Letter
             if self.show_letter == True:
                 note_letter = Staff.basic_font.render(str(note.note_letter), True, BLUE)
                 note_letter_rect = note_letter.get_rect(center=(int((note_xloc)*Staff.x_percent), int((2)*Staff.y_percent + 20)))
                 win.blit(note_letter, note_letter_rect)
+
             # Ledger lines
             if note.note_value >= 50:
                 if note.note_height < 1:
@@ -222,14 +239,16 @@ class Staff():
                                           int((Staff.TREBLE_MIDDLE_C_YLOC-(12*Staff.NOTE_SIZE)-(ledgerLine*2)*Staff.NOTE_SIZE)*Staff.y_percent),
                                           int((Staff.NOTE_SIZE*2)*Staff.x_percent),
                                           2))
+                        
             # Note head
             pygame.gfxdraw.filled_circle(win,
                                          int((note_xloc)*Staff.x_percent),
                                          int((Staff.TREBLE_MIDDLE_C_YLOC-(note.note_height)*Staff.NOTE_SIZE)*Staff.y_percent),
                                          int((Staff.NOTE_SIZE)*Staff.y_percent),
                                          note.note_color)
+            
             # Note stem
-            if self.note_type != "whole":
+            if self.note_type != "Whole":
                 if note.stem_up == True:
                     pygame.draw.rect(win,
                                     note.note_color,
@@ -244,6 +263,7 @@ class Staff():
                                     int((Staff.TREBLE_MIDDLE_C_YLOC-(note.note_height)*Staff.NOTE_SIZE)*Staff.y_percent),
                                     3,
                                     int((Staff.NOTE_SIZE*4)*Staff.x_percent)))
+                    
             # Accidentals
             if note.accidental < 0:
                 flatSymbol = Staff.accidental_font.render("b", True, note.note_color)
@@ -261,7 +281,7 @@ class Staff():
             if not self.symbol_correct:
                 symbol = Staff.symbol_font.render("X", True, RED)
             symbol.set_alpha(self.symbol_alpha)
-            symbol_rect = symbol.get_rect(center=(int((Staff.GOAL_XLOC)*Staff.x_percent), int((Staff.TREBLE_MIDDLE_C_YLOC - Staff.NOTE_SIZE*15)*Staff.y_percent)))
+            symbol_rect = symbol.get_rect(center=(int((Staff.GOAL_XLOC)*Staff.x_percent), int((Staff.TREBLE_MIDDLE_C_YLOC - Staff.NOTE_SIZE*14.9)*Staff.y_percent)))
             win.blit(symbol, symbol_rect)
             self.symbol_alpha -= self.symbol_speed
 
@@ -413,23 +433,23 @@ def main():
                         game.note_spacing = 6
                     game.add_notes()
                 elif event.key == pygame.K_3:
-                    if game.staves == "treble":
-                        game.staves = "bass"
-                    elif game.staves == "bass":
-                        game.staves = "both"
+                    if game.staves == "Treble":
+                        game.staves = "Bass"
+                    elif game.staves == "Bass":
+                        game.staves = "Both"
                     else:
-                        game.staves = "treble"
+                        game.staves = "Treble"
                 elif event.key == pygame.K_4:
                     game.use_accidentals = not(game.use_accidentals)
                 elif event.key == pygame.K_5:
                     game.show_letter = not(game.show_letter)
                 elif event.key == pygame.K_6:
-                    if game.note_type == "whole":
-                        game.note_type = "quarter"
-                    elif game.note_type == "quarter":
-                        game.note_type = "half"
+                    if game.note_type == "Whole":
+                        game.note_type = "Quarter"
+                    elif game.note_type == "Quarter":
+                        game.note_type = "Half"
                     else:
-                        game.note_type = "whole"
+                        game.note_type = "Whole"
                 else:
                     game.note_incorrect()
             if event.type == pygame.midi.MIDIIN:
