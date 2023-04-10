@@ -1,4 +1,5 @@
 '''
+TODO Implement error handling for no MIDI device
 xTODO Fix scaling
 xTODO Fix ledger line positions
 xTODO Fix speed scaling to match BPM
@@ -14,12 +15,13 @@ TODO Add contols for:
         Setting note spacing
         Selecting staves
         Using accidentals
-        Adjusting note range
         Showing note letter
         Changing note type
+        -
+        Adjusting note range
         Merging/splitting staves
 xTODO Add note stems
-TODO Add speed scaling (+ and/or -) for position value reaching threshold
+TODO Add automatic speed scaling (+ and/or -) for position value reaching threshold
 TODO Align image files around an origin (if you find time)
 TODO Restructure project
 '''
@@ -83,21 +85,21 @@ class Staff():
     symbol_font = None
     
     treble_clef_ratio = 323/118
-    treble_clef_img = pygame.image.load("graphics\\treble_clef.png").convert_alpha()
+    treble_clef_img = pygame.image.load("graphics/treble_clef.png").convert_alpha()
     bass_clef_ratio = 150/130
-    bass_clef_img = pygame.image.load("graphics\\bass_clef.png").convert_alpha()
+    bass_clef_img = pygame.image.load("graphics/bass_clef.png").convert_alpha()
     sharp_ratio = 142/45
-    sharp_img = pygame.image.load("graphics\\sharp.png").convert_alpha()
+    sharp_img = pygame.image.load("graphics/sharp.png").convert_alpha()
     flat_ratio = 106/43
-    flat_img = pygame.image.load("graphics\\flat.png").convert_alpha()
+    flat_img = pygame.image.load("graphics/flat.png").convert_alpha()
     whole_note_ratio = 48/79
-    whole_note_img = pygame.image.load("graphics\\whole_note.png").convert_alpha()
+    whole_note_img = pygame.image.load("graphics/whole_note.png").convert_alpha()
     half_note_ratio = 188/62
-    half_note_up_img = pygame.image.load("graphics\\half_note.png").convert_alpha()
-    half_note_down_img = pygame.image.load("graphics\\half_note.png").convert_alpha()
+    half_note_up_img = pygame.image.load("graphics/half_note.png").convert_alpha()
+    half_note_down_img = pygame.image.load("graphics/half_note.png").convert_alpha()
     quarter_note_ratio = 188/62
-    quarter_note_up_img = pygame.transform.rotate(pygame.image.load("graphics\\quarter_note.png").convert_alpha(),180)
-    quarter_note_down_img = pygame.transform.rotate(pygame.image.load("graphics\\quarter_note.png").convert_alpha(),180)
+    quarter_note_up_img = pygame.transform.rotate(pygame.image.load("graphics/quarter_note.png").convert_alpha(),180)
+    quarter_note_down_img = pygame.transform.rotate(pygame.image.load("graphics/quarter_note.png").convert_alpha(),180)
 
     old_winx = 0
     old_winy = 0
@@ -113,7 +115,7 @@ class Staff():
         self.staves = "Treble"
         self.use_accidentals = False
         self.show_letter = False
-        self.show_MIDI = False
+        self.show_MIDI = True
         self.note_type = "Whole"
         ##
         
@@ -145,15 +147,15 @@ class Staff():
             Staff.basic_font = pygame.font.SysFont('Calibri', int(4*Staff.y_percent))
             Staff.accidental_font = pygame.font.SysFont('Calibri', int(6*Staff.y_percent))
             Staff.symbol_font = pygame.font.SysFont('Calibri', int(8*Staff.y_percent), bold=True)
-            Staff.treble_clef_img = pygame.image.load("graphics\\treble_clef.png").convert_alpha()
-            Staff.bass_clef_img = pygame.image.load("graphics\\bass_clef.png").convert_alpha()
-            Staff.sharp_img = pygame.image.load("graphics\\sharp.png").convert_alpha()
-            Staff.flat_img = pygame.image.load("graphics\\flat.png").convert_alpha()
-            Staff.whole_note_img = pygame.image.load("graphics\\whole_note.png").convert_alpha()
-            Staff.half_note_up_img = pygame.image.load("graphics\\half_note.png").convert_alpha()
-            Staff.half_note_down_img = pygame.transform.rotate(pygame.image.load("graphics\\half_note.png").convert_alpha(),180)
-            Staff.quarter_note_up_img = pygame.image.load("graphics\\quarter_note.png").convert_alpha()
-            Staff.quarter_note_down_img = pygame.transform.rotate(pygame.image.load("graphics\\quarter_note.png").convert_alpha(),180)
+            Staff.treble_clef_img = pygame.image.load("graphics/treble_clef.png").convert_alpha()
+            Staff.bass_clef_img = pygame.image.load("graphics/bass_clef.png").convert_alpha()
+            Staff.sharp_img = pygame.image.load("graphics/sharp.png").convert_alpha()
+            Staff.flat_img = pygame.image.load("graphics/flat.png").convert_alpha()
+            Staff.whole_note_img = pygame.image.load("graphics/whole_note.png").convert_alpha()
+            Staff.half_note_up_img = pygame.image.load("graphics/half_note.png").convert_alpha()
+            Staff.half_note_down_img = pygame.transform.rotate(pygame.image.load("graphics/half_note.png").convert_alpha(),180)
+            Staff.quarter_note_up_img = pygame.image.load("graphics/quarter_note.png").convert_alpha()
+            Staff.quarter_note_down_img = pygame.transform.rotate(pygame.image.load("graphics/quarter_note.png").convert_alpha(),180)
             Staff.treble_clef_img = pygame.transform.scale(Staff.treble_clef_img, (int(10*Staff.y_percent),int(10*Staff.y_percent*Staff.treble_clef_ratio)))
             Staff.bass_clef_img = pygame.transform.scale(Staff.bass_clef_img, (int(12*Staff.y_percent),int(12*Staff.y_percent*Staff.bass_clef_ratio)))
             Staff.sharp_img = pygame.transform.scale(Staff.sharp_img, (int(2.5*Staff.y_percent),int(2.5*Staff.y_percent*Staff.sharp_ratio)))
@@ -383,8 +385,12 @@ class Note():
     def generate_note_value(self):
         self.note_value = random.randint(64,79)
         #self.note_value = random.choice([60,81])
-        if self.note_value % 12 in Note.BLACK_KEY_MODS and self.accidentals == True:
-            self.accidental = random.choice([-1,1])
+        if self.accidentals == True:
+            if self.note_value % 12 in Note.BLACK_KEY_MODS:
+                self.accidental = random.choice([-1,1])
+        else:
+            while self.note_value % 12 in Note.BLACK_KEY_MODS:
+                self.note_value = random.randint(64,79)
     
     def generate_note_height(self):
         # Distance on staff from Middle C (60)
@@ -412,7 +418,12 @@ def print_device_info():
     pygame.midi.quit()
 
 def _print_device_info():
-    for i in range(pygame.midi.get_count()):
+    for i in [3]:
+    #for i in range(pygame.midi.get_count()):
+        print(pygame.midi.get_default_input_id)
+        print(pygame.midi.get_device_info(i), i)
+        return
+
         r = pygame.midi.get_device_info(i)
         (interf, name, input, output, opened) = r
 
@@ -422,10 +433,10 @@ def _print_device_info():
         if output:
             in_out = "(output)"
 
-        #print(
-            #"%2i: interface :%s:, name :%s:, opened :%s:  %s"
-            #% (i, interf, name, opened, in_out)
-        #)
+        print(
+            "%2i: interface :%s:, name :%s:, opened :%s:  %s"
+            % (i, interf, name, opened, in_out)
+        )
 
 
 
@@ -435,6 +446,8 @@ def _print_device_info():
 # -------------------------- MAIN -------------------------- 
 
 def main():
+
+    print_device_info()
 
     # Initialize MIDI
     pygame.fastevent.init()
@@ -448,7 +461,8 @@ def main():
         input_id = pygame.midi.get_default_input_id()
     else:
         input_id = device_id
-    #print("using input_id :%s:" % input_id)
+    print("using input_id :%s:" % input_id)
+    input_id = 3
     
     piano_input = pygame.midi.Input(input_id)
     

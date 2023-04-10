@@ -3,5 +3,6 @@ ARCHIVE/
 BACKUP/
 EXTRAS/
 
-# Ignore all Photoshop files
+# Ignore all Photoshop files and batch files
 *.psd
+*.bat
