@@ -2,7 +2,10 @@
 ARCHIVE/
 BACKUP/
 EXTRAS/
+__pycache__/
 
-# Ignore all Photoshop files and batch files
+# Ignore all Photoshop files, batch files, test files, and pyc files
 *.psd
 *.bat
+test*
+*.pyc
