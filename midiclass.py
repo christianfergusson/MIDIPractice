@@ -8,6 +8,9 @@ from buttonclass import *
 pygame.init()
 
 class MIDIClass:
+
+    active_device = None
+
     def __init__(self, win):
         self.screen = win
         self.all_devices = []
@@ -28,21 +31,23 @@ class MIDIClass:
             self.refresh_progress = 110
 
     def find_devices(self):
+        MIDIClass.active_device = None
+        self.device_buttons = {}
         pygame.midi.quit()
         pygame.midi.init()
         self.all_devices = [pygame.midi.get_device_info(i) for i in range(pygame.midi.get_count())]
-        self.input_devices = [i for i,x in enumerate(self.all_devices) if x[2] != 4]  ## Change this back to:  x[2] == 1
+        self.input_devices = [i for i,x in enumerate(self.all_devices) if x[2] == 1]  ## Change this back to:  x[2] == 1
         for i in range(len(self.input_devices)):
             print(f"DEVICE: {self.all_devices[self.input_devices[i]]}")
             self.device_buttons[self.input_devices[i]] = ButtonClass(self.screen, [10, 10, 80, 8, 12], str(self.all_devices[self.input_devices[i]][1]).split("'")[1], c.GREY, index=i)
 
     def activate_device(self, selection):
-        device = None
+        MIDIClass.active_device = None
         try:
-            device = pygame.midi.Input(selection)
+            MIDIClass.active_device = pygame.midi.Input(selection)
         except:
             print("Activation failed")
-        print(f"active: {device}")
+        print(f"active: {MIDIClass.active_device}")
         print()
     
     def scale(self):

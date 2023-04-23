@@ -210,5 +210,10 @@ class StaffClass:
                 self.note_correct()
             else:
                 self.note_incorrect()
+        if event.type == pygame.midi.MIDIIN:
+            #print(event)
+            if event.status == 144:
+                print(f"TARGET: {self.notes[0].note_value}\tPRESSED: {event.data1}")
+                self.check_note_press(event.data1)
         for note in self.notes:
             note.process_events(event)

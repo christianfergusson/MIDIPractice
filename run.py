@@ -16,6 +16,7 @@ fps_clock = pygame.time.Clock()
 
 
 def exit():
+    del MIDIClass.active_device
     pygame.midi.quit()
     pygame.quit()
     sys.exit()
@@ -43,16 +44,14 @@ def main():
             main_process_events(event)
             screen.process_events(event)
         
-        
         ## Move this to midiclass?
-        if piano == None:
-            pass
-        elif piano.poll():
-            midi_events = piano.read(10)
-            # Convert them into pygame events.
-            midi_evs = pygame.midi.midis2events(midi_events, piano.device_id)
-            for m_e in midi_evs:
-                event_post(m_e)
+        if MIDIClass.active_device != None:
+            if MIDIClass.active_device.poll():
+                midi_events = MIDIClass.active_device.read(10)
+                # Convert them into pygame events.
+                midi_evs = pygame.midi.midis2events(midi_events, MIDIClass.active_device.device_id)
+                for m_e in midi_evs:
+                    event_post(m_e)
 
         screen.scale()
         screen.process()
