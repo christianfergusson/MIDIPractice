@@ -59,10 +59,125 @@ With multiple staves active, all sets of notes follow the same movement and do n
 
 ### USER SETTINGS:
 
+<table>
+    <tr>
+        <th>
+            Option
+        </th><th>
+            Details
+        </th><th>
+            <div style="width:330px">Example</div>
+        </th>
+    </tr>
+    <tr>
+        <td>
+            Note Spacing
+        </td><td>
+            This changes the amount of horizontal space between each note on the staff in order to match visibility preference
+        </td><td>
+            <img src="images/12notespacing6.png" alt="Note Spacing (6)" width="320" height="252"><br><img src="images/13notespacing10.png" alt="Note Spacing (10)" width="320" height="252"><br><img src="images/14notespacing14.png" alt="Note Spacing (14)" width="320" height="252">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Note Spacing
+        </td><td>
+            This changes the amount of horizontal space between each note on the staff in order to match visibility preference
+        </td><td>
+            <img src="images/12notespacing6.png" alt="Note Spacing (6)" width="320" height="252">
+        </td>
+    </tr>
+        <td>
+            BPM
+        </td><td>
+            This sets the approximate speed at which the notes move, so that hitting the correct notes at this rate means the user will not fall behind or get ahead
+        </td><td>
+            <img src="images/placeholderGIF.png" alt="placeholder" width="320" height="252"><br><img src="images/placeholderGIF.png" alt="placeholder" width="320" height="252">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Note Spacing
+        </td><td>
+            This changes the amount of horizontal space between each note on the staff in order to match visibility preference
+        </td><td>
+            <img src="images/12notespacing6.png" alt="Note Spacing (6)" width="320" height="252"><br><img src="images/13notespacing10.png" alt="Note Spacing (10)" width="320" height="252"><br><img src="images/14notespacing14.png" alt="Note Spacing (14)" width="320" height="252">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Staves Active
+        </td><td>
+            This sets which staves are active (treble, bass, or both)
+        </td><td>
+            <img src="images/placeholder.png" alt="placeholder" width="320" height="252"><br><img src="images/placeholder.png" alt="placeholder" width="320" height="252"><br><img src="images/placeholder.png" alt="placeholder" width="320" height="252">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Accidentals
+        </td><td>
+            This toggles whether notes can be generated with accidentals or will never have them.<br><br>Notes already on screen have a random chance to adopt an accidental when enabled, and all accidentals are removed when disabled.
+        </td><td>
+            <img src="images/18noaccidentals.png" alt="No Accidentals" width="320" height="252"><br><img src="images/19accidentals.png" alt="With Accidentals" width="320" height="252">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Note Type
+        </td><td>
+            This changes the note symbol (whole note, half note, or quarter note) in order to match visibility preference.<br><br>This does not affect rate of play at all.
+        </td><td>
+            <img src="images/20quarter.png" alt="Quarter Notes" width="320" height="252"><br><img src="images/21half.png" alt="Half Notes" width="320" height="252"><br><img src="images/22whole.png" alt="Whole Notes" width="320" height="252">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Variable Note Length
+        </td><td>
+            This will make the newly generated notes have varying note lengths and can include rests in order to more realistically simulate actual sheet music.<br><br>While enabled, this makes the "Note Type" option irrelevant.
+        </td><td>
+            <img src="images/placeholder.png" alt="placeholder" width="320" height="252"><br><img src="images/placeholder.png" alt="placeholder" width="320" height="252">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Simultaneous Notes
+        </td><td>
+            Disabled means that only a single note will be generated at each location, either on the treble staff or the bass staff.<br><br>Enabled means that a note will be generated on both staves for each note position, and so the left and right hands will need to play simultaneously.
+        </td><td>
+            <img src="images/placeholder.png" alt="placeholder" width="320" height="252"><br><img src="images/placeholder.png" alt="placeholder" width="320" height="252">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Note Letter Display
+        </td><td>
+            This toggles whether or not the note name (e.g. "C#") will display above the notes.<br><br>This is useful early in a user's practice while they are still familiarizing themselves with the notes.
+        </td><td>
+            <img src="images/27noteletter.gif" alt="Note Letter Display Animation" width="320" height="252">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            MIDI Value Display
+        </td><td>
+            This toggles whether or not the MIDI value (e.g. "64") will display above each note, as well as displaying the input values from the MIDI device above the topmost clef.  It can be used for diagnostics to compare to the input value from the MIDI device.
+        </td><td>
+            <img src="images/28midivalue.gif" alt="MIDI Value Display Animation" width="320" height="252">
+</table>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+### USER SETTINGS #2:
+
 Option | Details | <div style="width:330px">Example</div>
 -------|---------|--------
 Note Range			 | This limits the not generation to a certain range of notes, which can help the user focus their practice and can also act as a difficulty modifier | <img src="images/placeholder.png" alt="placeholder" width="320" height="252"><br><img src="images/placeholder.png" alt="placeholder" width="320" height="252">
-BPM					 | This sets the approximate speed at which the notes move, so that hitting the correct notes at this rate means the user will not fall behind or get ahead | <img src="images/placeholder.gif" alt="placeholder" width="320" height="252"><br><img src="images/placeholder.gif" alt="placeholder" width="320" height="252">
+BPM					 | This sets the approximate speed at which the notes move, so that hitting the correct notes at this rate means the user will not fall behind or get ahead | <img src="images/placeholderGIF.png" alt="placeholder" width="320" height="252"><br><img src="images/placeholderGIF.png" alt="placeholder" width="320" height="252">
 Note Spacing		 | This changes the amount of horizontal space between each note on the staff in order to match visibility preference | <img src="images/12notespacing6.png" alt="Note Spacing (6)" width="320" height="252"><br><img src="images/13notespacing10.png" alt="Note Spacing (10)" width="320" height="252"><br><img src="images/14notespacing14.png" alt="Note Spacing (14)" width="320" height="252">
 Staves Active		 | This sets which staves are active (treble, bass, or both) | <img src="images/placeholder.png" alt="placeholder" width="320" height="252"><br><img src="images/placeholder.png" alt="placeholder" width="320" height="252"><br><img src="images/placeholder.png" alt="placeholder" width="320" height="252">
 Accidentals			 | This toggles whether notes can be generated with accidentals or will never have them.<br><br>Notes already on screen have a random chance to adopt an accidental when enabled, and all accidentals are removed when disabled. | <img src="images/18noaccidentals.png" alt="No Accidentals" width="320" height="252"><br><img src="images/19accidentals.png" alt="With Accidentals" width="320" height="252">
