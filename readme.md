@@ -27,7 +27,7 @@ Requires:
 ## Operation
 
 ### Device Selection
-<img src="images/placeholder.png" alt="placeholder" width="320" height="252">
+<img src="images/01devices.png" alt="device selection screen" width="320" height="252">
 
 Initially, the UI will prompt for a MIDI device to be selected (or the user can re-scan the devices).
 
@@ -62,7 +62,7 @@ With multiple staves active, all sets of notes follow the same movement and do n
 Option | Details | <div style="width:330px">Example</div>
 -------|---------|--------
 Note Range			 | This limits the not generation to a certain range of notes, which can help the user focus their practice and can also act as a difficulty modifier | <img src="images/placeholder.png" alt="placeholder" width="320" height="252"><br><img src="images/placeholder.png" alt="placeholder" width="320" height="252">
-BPM					 | This sets the approximate speed at which the notes move, so that hitting the correct notes at this rate means the user will not fall behind or get ahead | <img src="images/placeholder.gif" alt="placeholder" width="320" height="252"><br><img src="images/placeholder.gif" alt="placeholder" width="320" height="252">
+BPM					 | This sets the approximate speed at which the notes move, so that hitting the correct notes at this rate means the user will not fall behind or get ahead | <img src="images/placeholderGIF.png" alt="placeholderGIF" width="320" height="252"><br><img src="images/placeholderGIF.png" alt="placeholderGIF" width="320" height="252">
 Note Spacing		 | This changes the amount of horizontal space between each note on the staff in order to match visibility preference | <img src="images/12notespacing6.png" alt="Note Spacing (6)" width="320" height="252"><br><img src="images/13notespacing10.png" alt="Note Spacing (10)" width="320" height="252"><br><img src="images/14notespacing14.png" alt="Note Spacing (14)" width="320" height="252">
 Staves Active		 | This sets which staves are active (treble, bass, or both) | <img src="images/placeholder.png" alt="placeholder" width="320" height="252"><br><img src="images/placeholder.png" alt="placeholder" width="320" height="252"><br><img src="images/placeholder.png" alt="placeholder" width="320" height="252">
 Accidentals			 | This toggles whether notes can be generated with accidentals or will never have them.<br><br>Notes already on screen have a random chance to adopt an accidental when enabled, and all accidentals are removed when disabled. | <img src="images/18noaccidentals.png" alt="No Accidentals" width="320" height="252"><br><img src="images/19accidentals.png" alt="With Accidentals" width="320" height="252">
