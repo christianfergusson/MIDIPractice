@@ -85,6 +85,8 @@ class MIDIClass:
                     self.selected_device = name
                     self.activate_device(self.selected_device)
                     self.screen.mode = "Play"
+            if len(self.device_buttons) == 0 and self.no_devices_button.check(mouse_x, mouse_y):
+                    self.screen.mode = "Play"
             if self.refresh_button.check(mouse_x, mouse_y):
                 self.refresh_progress = 0
                 self.find_devices()
